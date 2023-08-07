@@ -9,39 +9,52 @@
     <script src='main.js'></script>
     <style>
          * {
-        overflow: hidden;
+        overflow: hidden; /*qualquer conteúdo que ultrapassar os limites do elemento será cortado e não será exibido.*/
         margin: 0;
         padding: 0;
       }
     </style>
 </head>
 <body>
-    <canvas></canvas>
+    <canvas></canvas>  
     <script>
-     const canvasEl=document.querySelector("canvas"),
-     canvasCtx =canvasEl.getContext("2d")
-     const lineWidth = 15
+     const canvasEl=document.querySelector("canvas"),  //canvas elemento
+     canvasCtx =canvasEl.getContext("2d"),  //canvas contexto
+     lineWidth = 15  //largura da linha branca 
    
     function setup(){
-        canvasEl.width=canvasCtx.width=window.innerWidth
-        canvasEl.height=canvasCtxheight=window.innerHeight 
+        canvasEl.width=canvasCtx.width=window.innerWidth    //definindo largura igual a largura da tela
+        canvasEl.height=canvasCtxheight=window.innerHeight   //definindo altura igual a largura da tela
     }
-    function draw(){
-     canvasCtx.fillStyle= "#286047"
-     canvasCtx.fillRect(0,0, window.innerWidth , window.innerHeight)
+    function draw(){  //desenha inicialmente de forma estatica
+     canvasCtx.fillStyle= "#286047"  //defini o estilo do retangulo
+     canvasCtx.fillRect(0,0, window.innerWidth , window.innerHeight)  // desde o ponto 0 pegando a largura e altura da tela 
      canvasCtx.fillStyle= "#ffffff"
 
-    
-
-     const x = window.innerWidth / 2 - lineWidth /2 
-     const y = 0
+//desenha linha central
+     const x = window.innerWidth / 2 - lineWidth /2  //centraliza a linha branca
+     const y = 0  //ponto de inicio 
      const w = lineWidth
-     const h = window.innerHeight
+     const h = window.innerHeight  
 
      canvasCtx.fillRect(x , y, w , h)
-    }
+    
+canvasCtx.fillRect(10,400,lineWidth,200) // (posição , tamanho)
+canvasCtx.fillRect(
+    window.innerWidth - lineWidth -10,
+    200,
+    lineWidth,
+    200
+)
+
+}
+
     setup()
+
     draw()
 </script>
 </body>
 </html>
+
+
+

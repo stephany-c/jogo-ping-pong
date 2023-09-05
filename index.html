@@ -1,66 +1,127 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Jogo de Ping Pong</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jogo Ping-Pong</title>
     <style>
-         * {
-        overflow: hidden; /*qualquer conteúdo que ultrapassar os limites do elemento será cortado e não será exibido.*/
-        margin: 0;
-        padding: 0;
+      /* Estilo global para a página */
+      * {
+        overflow: hidden; /* Esconde o conteúdo que ultrapassar os limites dos elementos */
+        margin: 0; /* Remove margens padrão */
+        padding: 0; /* Remove preenchimento padrão */
       }
     </style>
-</head>
-<body>
-    <canvas></canvas>  
+  </head>
+  <body>
+    <canvas></canvas> <!-- O elemento canvas onde o jogo será desenhado -->
     <script>
-     const canvasEl=document.querySelector("canvas"),  //canvas elemento
-     canvasCtx =canvasEl.getContext("2d"),  //canvas contexto
-     lineWidth = 15  //largura da linha branca 
-   
-    function setup(){
-        canvasEl.width=canvasCtx.width=window.innerWidth    //definindo largura igual a largura da tela
-        canvasEl.height=canvasCtxheight=window.innerHeight   //definindo altura igual a largura da tela
-    }
-    function draw(){  //desenha inicialmente de forma estatica
-     canvasCtx.fillStyle= "#286047"  //defini o estilo do retangulo
-     canvasCtx.fillRect(0,0, window.innerWidth , window.innerHeight)  // desde o ponto 0 pegando a largura e altura da tela 
-     canvasCtx.fillStyle= "#ffffff"
+      // Captura o elemento canvas e obtém seu contexto 2D
+      const canvasEl = document.querySelector("canvas"),
+        canvasCtx = canvasEl.getContext("2d"),
+        gapX = 10; // Espaço horizontal entre elementos
 
-//desenha linha central
-     const x = window.innerWidth / 2 - lineWidth /2  //centraliza a linha branca
-     const y = 0  //ponto de inicio 
-     const w = lineWidth
-     const h = window.innerHeight  
+      // Define as dimensões e funções de desenho para o campo de jogo
+      const field = {
+        w: window.innerWidth,
+        h: window.innerHeight,
+        draw: function () {
+          canvasCtx.fillStyle = "#286047"; // Cor de preenchimento do campo
+          canvasCtx.fillRect(0, 0, this.w, this.h); // Desenha o campo
+        },
+      };
 
-     canvasCtx.fillRect(x , y, w , h)
- //desenha a raquete esquerda   
-canvasCtx.fillRect(10,400,lineWidth,200) // (posição , tamanho)
-//raquete direita
-canvasCtx.fillRect(
-    window.innerWidth - lineWidth -10,
-    200,
-    lineWidth,
-    200
-)
+      // Define as dimensões e funções de desenho para a linha central
+      const line = {
+        w: 15, // Largura da linha
+        h: field.h, // Altura igual à altura do campo
+        draw: function () {
+          canvasCtx.fillStyle = "#ffffff"; // Cor de preenchimento da linha
+          canvasCtx.fillRect(field.w / 2 - this.w / 2, 0, this.w, this.h); // Desenha a linha central
+        },
+      };
 
-//desenhando a bolinha
-canvasCtx.beginPath()
-canvasCtx.arc(200,300,20, 0,2* Math.PI ,false)
-canvasCtx.fill()
+      // Define as dimensões e funções de desenho para a raquete esquerda
+      const leftPaddle = {
+        x: gapX,
+        y: 100,
+        w: line.w,
+        h: 200,
+        draw: function () {
+          canvasCtx.fillStyle = "#ffffff"; // Cor de preenchimento da raquete
+          canvasCtx.fillRect(this.x, this.y, this.w, this.h); // Desenha a raquete esquerda
+        },
+      };
 
-}
+      // Define as dimensões e funções de desenho para a raquete direita
+      const rightPaddle = {
+        x: field.w - line.w - gapX,
+        y: 100,
+        w: line.w,
+        h: 200,
+        draw: function () {
+          canvasCtx.fillStyle = "#ffffff"; // Cor de preenchimento da raquete
+          canvasCtx.fillRect(this.x, this.y, this.w, this.h); // Desenha a raquete direita
+        },
+      };
 
-    setup()
+      // Define as dimensões e funções de desenho para a pontuação
+      const score = {
+        human: 1,
+        computer: 2,
+        draw: function () {
+          canvasCtx.font = "bold 72px Arial"; // Estilo de fonte para a pontuação
+          canvasCtx.textAlign = "center"; // Alinhamento central do texto
+          canvasCtx.textBaseline = "top"; // Alinhamento superior do texto
+          canvasCtx.fillStyle = "#01341D"; // Cor do texto
+          canvasCtx.fillText(this.human, field.w / 4, 50); // Desenha a pontuação do jogador humano
+          canvasCtx.fillText(this.computer, field.w / 4 + field.w / 2, 50); // Desenha a pontuação do jogador computador
+        },
+      };
 
-    draw()
-</script>
-</body>
+      // Define as dimensões e funções de desenho para a bola
+      const ball = {
+        x: 370,
+        y: 120,
+        r: 20, // Raio da bola
+        _move:function (){
+            this.x += 1
+            this.y += 1
+        },
+        draw: function () {
+          canvasCtx.fillStyle = "#ffffff"; // Cor de preenchimento da bola
+          canvasCtx.beginPath();
+          canvasCtx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false); // Desenha a bola como um círculo
+          canvasCtx.fill();
+          this._move()
+        },
+      };
+
+      // Função de configuração inicial
+      function setup() {
+        canvasEl.width = canvasCtx.width = field.w; // Define a largura do canvas
+        canvasEl.height = canvasCtx.height = field.h; // Define a altura do canvas
+      }
+
+      // Função de desenho principal
+      function draw() {
+        field.draw(); // Desenha o campo
+        line.draw(); // Desenha a linha central
+
+        leftPaddle.draw(); // Desenha a raquete esquerda
+        rightPaddle.draw(); // Desenha a raquete direita
+
+        score.draw(); // Desenha a pontuação
+
+        ball.draw(); // Desenha a bola
+      }
+
+      setup(); // Chama a função de configuração inicial
+      draw(); // Chama a função de desenho principal
+     window.setInterval(draw , 1000 /60)
+
+    
+    </script>
+  </body>
 </html>
-
-
-

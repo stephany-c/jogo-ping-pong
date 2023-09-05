@@ -100,6 +100,7 @@
 
       // Função de configuração inicial
       function setup() {
+
         canvasEl.width = canvasCtx.width = field.w; // Define a largura do canvas
         canvasEl.height = canvasCtx.height = field.h; // Define a altura do canvas
       }
@@ -112,13 +113,13 @@
         leftPaddle.draw(); // Desenha a raquete esquerda
         rightPaddle.draw(); // Desenha a raquete direita
 
-        score.draw(); // Desenha a pontuação
+        score.draw(); // Desenha o placar
 
         ball.draw(); // Desenha a bola
       }
 
-      setup(); // Chama a função de configuração inicial
-      draw(); // Chama a função de desenho principal
+      setup(); //Chama a função de configuração inicial
+      draw(); //Chama a função de desenho principal
      window.setInterval(draw , 1000 /60)
 
     
